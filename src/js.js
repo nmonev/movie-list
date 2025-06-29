@@ -25,14 +25,35 @@ pagination.style.display = "none";
 
 // Popular movies list for 2025
 const popularMoviesList = [
-  'Captain America: Brave New World', 'Bridget Jones: Mad About the Boy', 'The Monkey',
-  'Peter Pan\'s Neverland Nightmare', 'Thunderbolts', 'Final Destination: Bloodlines',
-  'Mission: Impossible – The Final Reckoning', 'Lilo & Stitch', 'Fear Street: Prom Queen',
-  'Elio', 'How to Train Your Dragon', '28 Years Later', 'F1: The Movie',
-  'Jurassic World Rebirth', 'Superman', 'The Fantastic Four: First Steps',
-  'One Battle After Another', 'Ballerina', 'Ne Zha 2', 'Sinners',
-  'The Electric State', 'Snow White', 'A Minecraft Movie', 'The Conjuring: Last Rites',
-  'Tron: Ares', 'Bugonia', 'Wicked: For Good', 'Zootopia 2', 'Avatar: Fire and Ash',
+  'Captain America: Brave New World',
+  'Bridget Jones: Mad About the Boy',
+  'The Monkey',
+  'Peter Pan\'s Neverland Nightmare',
+  'Thunderbolts',
+  'Final Destination: Bloodlines',
+  'Mission: Impossible – The Final Reckoning',
+  'Lilo & Stitch',
+  'Fear Street: Prom Queen',
+  'Elio',
+  'How to Train Your Dragon',
+  '28 Years Later',
+  'F1: The Movie',
+  'Jurassic World Rebirth',
+  'Superman',
+  'The Fantastic Four: First Steps',
+  'One Battle After Another',
+  'Ballerina',
+  'Ne Zha 2',
+  'Sinners',
+  'The Electric State',
+  'Snow White',
+  'A Minecraft Movie',
+  'The Conjuring: Last Rites',
+  'Tron: Ares',
+  'Bugonia',
+  'Wicked: For Good',
+  'Zootopia 2',
+  'Avatar: Fire and Ash',
   'Freakier Friday'
 ];
 
@@ -53,7 +74,12 @@ prevBlock.addEventListener('click', () => loadPage(Math.max(1, currentPage - 11)
 nextBlock.addEventListener('click', () => loadPage(Math.min(totalPages, currentPage + 10)));
 genreSelect.addEventListener('change', applyFilters);
 typeSelect.addEventListener('change', () => loadPage(1));
-input.addEventListener('keypress', (e) => { if (e.key === 'Enter') loadPage(1); });
+
+input.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    loadPage(1);
+  }
+});
 
 // Load popular movies
 async function loadPopularMovies() {
@@ -78,15 +104,15 @@ async function loadPopularMovies() {
 // Display popular movies
 function displayPopularMovies(movies) {
   popularMovies.innerHTML = '';
-
+  
   movies.forEach((movie, index) => {
     const card = document.createElement('div');
     card.className = 'movie-card fade-in';
     card.style.animationDelay = `${index * 0.5}s`;
-
+    
     const poster = movie.Poster !== 'N/A' ? movie.Poster : 'download.png';
     const rating = movie.imdbRating !== 'N/A' ? movie.imdbRating : 'N/A';
-
+    
     card.innerHTML = `
       <img src="${poster}" alt="${movie.Title} poster" loading="lazy">
       <h3>${movie.Title}</h3>
@@ -100,13 +126,13 @@ function displayPopularMovies(movies) {
         <span>⭐</span>
       </button>
     `;
-
+    
     popularMovies.appendChild(card);
-
+    
     setTimeout(() => {
       card.classList.add('visible');
     }, index * 200);
-
+    
     card.querySelector('button').addEventListener('click', () => showModal(movie.imdbID));
   });
 }
@@ -115,7 +141,7 @@ function displayPopularMovies(movies) {
 function refreshPopularMovies() {
   const refreshBtn = document.querySelector('.refresh-btn');
   refreshBtn.style.transform = 'rotate(360deg)';
-
+  
   setTimeout(() => {
     loadPopularMovies();
     refreshBtn.style.transform = 'rotate(0deg)';
@@ -126,19 +152,19 @@ function refreshPopularMovies() {
 function loadPage(page) {
   const q = input.value.trim();
   if (!q) return;
-
+  
   lastQuery = q;
   currentPage = page;
   results.innerHTML = '<div class="loading-message">Loading results...</div>';
-
+  
   const selectedType = typeSelect.value;
   let apiUrl = `https://www.omdbapi.com/?apikey=${apiKey}&s=${encodeURIComponent(q)}&page=${page}`;
   if (selectedType) apiUrl += `&type=${selectedType}`;
-
+  
   fetch(apiUrl)
     .then(r => r.json())
     .then(data => {
-      if (data.Response === 'True') {
+      if (data.Response === 'True') { 
         allMovies = data.Search;
         totalResults = data.totalResults;
         totalPages = Math.ceil(totalResults / 10);
@@ -160,7 +186,7 @@ function loadPage(page) {
 function applyFilters() {
   const selectedGenre = genreSelect.value;
   let filteredMovies = allMovies;
-
+  
   if (selectedGenre) {
     filterMoviesByGenre(filteredMovies, selectedGenre);
   } else {
@@ -172,12 +198,12 @@ function applyFilters() {
 async function filterMoviesByGenre(movies, selectedGenre) {
   results.innerHTML = '<div class="loading-message">Filtering by genre...</div>';
   const filteredMovies = [];
-
+  
   for (const movie of movies) {
     try {
       const response = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&i=${movie.imdbID}`);
       const details = await response.json();
-
+      
       if (details.Response === 'True' && details.Genre && details.Genre.includes(selectedGenre)) {
         filteredMovies.push(movie);
       }
@@ -185,26 +211,26 @@ async function filterMoviesByGenre(movies, selectedGenre) {
       console.error('Error fetching details:', error);
     }
   }
-
+  
   displayMovies(filteredMovies);
 }
 
 // Display search results
 function displayMovies(list) {
   results.innerHTML = '';
-
+  
   if (list.length === 0) {
     results.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No movies match your criteria.</p>';
     return;
   }
-
+  
   list.forEach((movie, index) => {
     const card = document.createElement('div');
     card.className = 'movie-card fade-in';
     card.style.animationDelay = `${index * 0.1}s`;
-
+    
     const poster = movie.Poster !== 'N/A' ? movie.Poster : 'download.png';
-
+    
     card.innerHTML = `
       <img src="${poster}" alt="${movie.Title} poster" loading="lazy">
       <h3>${movie.Title}</h3>
@@ -215,12 +241,12 @@ function displayMovies(list) {
         <span>🎬</span>
       </button>
     `;
-
+    
     results.appendChild(card);
     setTimeout(() => {
       card.classList.add('visible');
     }, index * 100);
-
+    
     card.querySelector('button').addEventListener('click', () => showModal(movie.imdbID));
   });
 }
@@ -253,7 +279,7 @@ function showModal(imdbID) {
   overlay.querySelector('#modal-poster').src = '';
   overlay.querySelector('#modal-title').textContent = 'Loading...';
   overlay.classList.add('active');
-
+  
   fetch(`https://www.omdbapi.com/?apikey=${apiKey}&i=${imdbID}&plot=full`)
     .then(r => r.json())
     .then(m => {
@@ -264,18 +290,48 @@ function showModal(imdbID) {
         overlay.querySelector('#modal-genre').textContent = m.Genre || 'N/A';
         overlay.querySelector('#modal-director').textContent = m.Director || 'N/A';
         overlay.querySelector('#modal-actors').textContent = m.Actors || 'N/A';
-        overlay.querySelector('#modal-plot').textContent = m.Plot || 'No plot available.';
+        overlay.querySelector('#modal-rating').textContent = m.imdbRating || 'N/A';
+        overlay.querySelector('#modal-plot').textContent = m.Plot || 'Plot not available.';
+        overlay.querySelector('#modal-type').textContent = m.Type || 'N/A';
+      } else {
+        overlay.querySelector('#modal-title').textContent = 'Loading error';
+        overlay.querySelector('#modal-plot').textContent = 'Movie data not available.';
       }
     })
     .catch(err => {
-      overlay.querySelector('#modal-title').textContent = 'Error loading movie details.';
+      overlay.querySelector('#modal-title').textContent = 'Error';
+      overlay.querySelector('#modal-plot').textContent = 'Error fetching data: ' + err.message;
     });
 }
 
-// Optional animation setup function
+// Scroll animations
 function setupScrollAnimations() {
-  const cards = document.querySelectorAll('.movie-card');
-  cards.forEach(card => {
-    card.classList.add('fade-in');
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {    
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, observerOptions);
+  
+  document.querySelectorAll('.fade-in').forEach(el => {
+    observer.observe(el);
   });
 }
+
+// Random number generator
+function getRandomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Auto-refresh popular movies every 2 minutes
+setInterval(() => {
+  if (document.visibilityState === 'visible') {
+    refreshPopularMovies();
+  }
+}, 15000);
