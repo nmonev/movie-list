@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Movie Search</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <div class="container">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loader">
+        <div class="film-strip"></div>
+        <p>Loading movies...</p>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header">
+      <h1 class="site-title">
+        <span class="title-gradient">Search Movies</span>
+        <div class="sparkle-animation"></div>
+      </h1>
+      <p class="site-subtitle">Discover the best movies and TV shows</p>
+    </header>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+      <div class="filter-controls">
+        <div class="filter-group">
+          <label for="type-select">Media Type:</label>
+          <select id="type-select">
+            <option value="">All Types</option>
+            <option value="movie">Movies</option>
+            <option value="series">Series</option>
+            <option value="episode">Episodes</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="genre-select">Genre:</label>
+          <select id="genre-select">
+            <option value="">All Genres</option>
+            <option value="Action">Action</option>
+            <option value="Adventure">Adventure</option>
+            <option value="Animation">Animation</option>
+            <option value="Biography">Biography</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Crime">Crime</option>
+            <option value="Documentary">Documentary</option>
+            <option value="Drama">Drama</option>
+            <option value="Family">Family</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="History">History</option>
+            <option value="Horror">Horror</option>
+            <option value="Music">Music</option>
+            <option value="Musical">Musical</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Romance">Romance</option>
+            <option value="Sci-Fi">Science Fiction</option>
+            <option value="Sport">Sport</option>
+            <option value="Thriller">Thriller</option>
+            <option value="War">War</option>
+            <option value="Western">Western</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search Section -->
+    <section id="search-container" class="search-section">
+      <div class="search-wrapper">
+        <input
+          type="text"
+          id="search-input"
+          class="search-input"
+          placeholder="Enter movie, series, or episode title..."
+          aria-label="Media title"
+        />
+        <button id="search-btn" class="btn btn-primary">
+          <span class="btn-text">Search</span>
+          <span class="btn-icon">🔍</span>
+        </button>
+      </div>
+    </section>
+
+    <main>
+      <div id="results" class="results-grid" aria-live="polite"></div>
+
+      <!-- Pagination -->
+      <nav id="pagination" class="pagination" aria-label="Pagination" hidden>
+        <button id="prev-block-btn" class="btn" aria-label="Back 10 pages">« -10</button>
+        <button id="prev-btn" class="btn" aria-label="Previous page">‹ Previous</button>
+        <span id="page-info" class="page-info"></span>
+        <button id="next-btn" class="btn" aria-label="Next page">Next ›</button>
+        <button id="next-block-btn" class="btn" aria-label="Forward 10 pages">+10 »</button>
+      </nav>
+    </main>
+
+    <!-- Popular Movies Section -->
+    <section id="popular-section" class="popular-section">
+      <h2 class="section-title">
+        <span class="title-icon">🎬</span>
+        Most Popular Movies
+        <span class="refresh-btn" onclick="refreshPopularMovies()">🔄</span>
+      </h2>
+      <div id="popular-movies" class="popular-movies-grid"></div>
+    </section>
+
+    <!-- Modal for Movie Details -->
+    <div id="modal-overlay" class="modal-overlay" hidden>
+      <div id="modal-content" class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="close-modal btn-close" aria-label="Close modal">&times;</button>
+        <div class="modal-body">
+          <img id="modal-poster" class="modal-poster" alt="Movie poster">
+          <div id="modal-details" class="modal-details">
+            <h2 id="modal-title" class="modal-title"></h2>
+            <div class="modal-meta">
+              <span class="meta-item"><strong>Year:</strong> <span id="modal-year"></span></span>
+              <span class="meta-item"><strong>Type:</strong> <span id="modal-type"></span></span>
+              <span class="meta-item"><strong>Genre:</strong> <span id="modal-genre"></span></span>
+            </div>
+            <p><strong>Director:</strong> <span id="modal-director"></span></p>
+            <p><strong>Actors:</strong> <span id="modal-actors"></span></p>
+            <div class="rating-container">
+              <strong>IMDb:</strong> 
+              <span id="modal-rating" class="rating-badge"></span>
+            </div>
+            <p id="modal-plot" class="modal-plot"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="src/js.js"></script>
+  </div>
+</body>
+</html>
